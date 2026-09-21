@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kunal17711.github.io/emi-calculator/sitemap.xml

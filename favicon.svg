@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="url(#bg-grad)"/>
+  <rect x="12" y="10" width="40" height="44" rx="8" stroke="#38bdf8" stroke-width="2.5" fill="#0f172a" fill-opacity="0.8"/>
+  <rect x="18" y="16" width="28" height="10" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="42" y="24" fill="#38bdf8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" text-anchor="end">₹ EMI</text>
+  <circle cx="22" cy="34" r="3" fill="#38bdf8"/>
+  <circle cx="32" cy="34" r="3" fill="#38bdf8"/>
+  <circle cx="42" cy="34" r="3" fill="#818cf8"/>
+  <circle cx="22" cy="44" r="3" fill="#38bdf8"/>
+  <circle cx="32" cy="44" r="3" fill="#38bdf8"/>
+  <circle cx="42" cy="44" r="3" fill="#a855f7"/>
+  <defs>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0284c7"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+</svg>

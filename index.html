@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMI Calculator - Calculate Loan EMI, Interest &amp; Payment</title>
+  <meta name="description" content="Calculate home, car, and personal loan EMI in India. Get instant monthly payment, total interest breakdown, and amortization schedule. Free &amp; fast.">
+  <meta name="keywords" content="emi calculator, loan emi calculator, home loan emi, car loan emi, personal loan emi, emi calculation formula india">
+  <meta name="author" content="Kunal Builds">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://kunal17711.github.io/emi-calculator/">
+  <meta name="theme-color" content="#090d16">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kunal17711.github.io/emi-calculator/">
+  <meta property="og:title" content="EMI Calculator - Calculate Loan EMI, Interest &amp; Payment">
+  <meta property="og:description" content="Calculate home, car, and personal loan EMI in India with instant monthly payment, total interest breakdown, and donut chart. Free &amp; accurate.">
+  <meta property="og:image" content="https://kunal17711.github.io/emi-calculator/assets/bg.webp">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:site_name" content="EMI Calculator - Kunal Builds">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EMI Calculator - Calculate Loan EMI, Interest &amp; Payment">
+  <meta name="twitter:description" content="Calculate home, car, and personal loan EMI in India with instant monthly payment, total interest breakdown, and donut chart.">
+  <meta name="twitter:image" content="https://kunal17711.github.io/emi-calculator/assets/bg.webp">
+
+  <!-- Favicon & Preload -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preload" as="image" href="assets/bg.webp">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google AdSense (Ready)
+       TO ACTIVATE AFTER GOOGLE ADSENSE APPROVAL:
+       1. Replace ca-pub-XXXXXXXXXXXXXXXX with your real Google AdSense Publisher ID.
+       2. Uncomment the script tag below.
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  -->
+
+  <!-- JSON-LD Structured Data: WebApplication, Person, FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://kunal17711.github.io/emi-calculator/#app",
+        "name": "EMI Calculator",
+        "url": "https://kunal17711.github.io/emi-calculator/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "description": "An intuitive, lightning-fast online EMI calculator designed for Indian loans. Calculates monthly installments, total interest, and principal amortization.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Kunal Builds",
+          "url": "https://heyitskunal.vercel.app/",
+          "sameAs": [
+            "https://instagram.com/bykunalbuilds",
+            "https://github.com/Kunal17711"
+          ]
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://heyitskunal.vercel.app/#person",
+        "name": "Kunal Builds",
+        "url": "https://heyitskunal.vercel.app/",
+        "sameAs": [
+          "https://instagram.com/bykunalbuilds",
+          "https://github.com/Kunal17711"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://kunal17711.github.io/emi-calculator/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is an EMI and how is it calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "EMI stands for Equated Monthly Installment. It is a fixed monthly payment made by a borrower to a lender on a specified date each calendar month. The EMI consists of both principal and interest components calculated using the reducing balance method."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the mathematical formula used for EMI calculation?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The mathematical formula for calculating EMI is: E = P * r * (1 + r)^n / ((1 + r)^n - 1), where P is the Principal loan amount, r is the monthly interest rate (annual interest rate divided by 12 and 100), and n is the loan tenure in months."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does loan tenure affect total interest payable?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A longer loan tenure lowers your monthly EMI amount, making monthly budgeting easier, but substantially increases the total interest paid over the life of the loan. A shorter tenure leads to a higher monthly EMI but saves significant interest."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I prepay or make part-payments to reduce my EMI?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, making prepayments directly reduces the outstanding principal balance. Borrowers can choose between reducing their monthly EMI while maintaining the loan tenure or keeping the EMI constant to shorten the tenure and save on total interest."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this EMI calculator include processing fees or GST?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "This calculator computes the core monthly principal and interest components. One-time processing fees, administrative charges, stamp duty, and applicable GST levied by individual banks or NBFCs are separate upfront expenses."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header with Required Branding -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" aria-label="EMI Calculator Home">
+        <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect width="64" height="64" rx="16" fill="url(#hdr-grad)"/>
+          <rect x="14" y="12" width="36" height="40" rx="6" stroke="#ffffff" stroke-width="2.5" fill="#0f172a" fill-opacity="0.85"/>
+          <text x="32" y="27" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="800" text-anchor="middle">₹</text>
+          <circle cx="24" cy="38" r="2.5" fill="#38bdf8"/>
+          <circle cx="32" cy="38" r="2.5" fill="#38bdf8"/>
+          <circle cx="40" cy="38" r="2.5" fill="#818cf8"/>
+          <defs>
+            <linearGradient id="hdr-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#0284c7"/>
+              <stop offset="1" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>EMI Calculator</span>
+      </a>
+
+      <div class="nav-group">
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Calculator</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-badge-group">
+          <!-- Required Kunal Builds link -->
+          <a href="https://heyitskunal.vercel.app/" target="_blank" rel="noopener" class="badge-link badge-author" title="Visit Kunal Builds">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l-10-5v9l10 5 10-5V6l-10 5z"/></svg>
+            <span>Kunal Builds</span>
+          </a>
+
+          <!-- Required Instagram link -->
+          <a href="https://instagram.com/bykunalbuilds" target="_blank" rel="noopener" class="badge-link" title="Follow @bykunalbuilds on Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            <span>@bykunalbuilds</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Reserved Ad Slot (CLS = 0) -->
+  <aside class="container ad-slot-wrapper" aria-label="Advertisement Banner">
+    <div class="ad-slot" id="ad-slot-top">
+      <span>Advertisement Space (Leaderboard 728x90)</span>
+      <span class="ad-disclaimer">Google AdSense Partner Network</span>
+    </div>
+  </aside>
+
+  <main id="main-content" class="container">
+    <!-- Hero Header -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Instant &amp; 100% Free Financial Tool
+      </div>
+      <h1 class="hero-title"><span class="gradient-text">EMI Calculator</span> for Indian Loans</h1>
+      <p class="hero-subtitle">Accurately calculate your monthly installment, overall interest burden, and complete loan amortization with instant visual breakdown.</p>
+    </section>
+
+    <!-- Interactive EMI Calculator Card (Glassmorphism) -->
+    <section class="calculator-card" aria-label="EMI Calculation Workspace">
+      <div class="calculator-grid">
+        
+        <!-- Left: Interactive Inputs & Sliders -->
+        <div class="calc-inputs">
+          
+          <!-- Loan Amount Input -->
+          <div class="input-group">
+            <div class="input-header">
+              <label for="loanAmountInput" class="input-label">
+                <span>Loan Amount</span>
+              </label>
+              <div class="input-field-wrapper">
+                <span class="currency-symbol" aria-hidden="true">₹</span>
+                <input type="text" id="loanAmountInput" class="calc-text-input has-prefix" value="25,00,000" aria-label="Loan Amount in Rupees">
+              </div>
+            </div>
+            <div class="range-slider-wrapper">
+              <input type="range" id="loanAmountRange" class="calc-range" min="50000" max="20000000" step="10000" value="2500000" aria-label="Loan Amount Slider">
+              <div class="range-minmax">
+                <span>₹ 50 K</span>
+                <span>₹ 1 Cr</span>
+                <span>₹ 2 Cr</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interest Rate Input -->
+          <div class="input-group">
+            <div class="input-header">
+              <label for="interestRateInput" class="input-label">
+                <span>Interest Rate (% p.a.)</span>
+              </label>
+              <div class="input-field-wrapper">
+                <input type="number" id="interestRateInput" class="calc-text-input has-suffix" value="8.5" min="1" max="30" step="0.1" aria-label="Interest Rate per annum">
+                <span class="unit-symbol" aria-hidden="true">%</span>
+              </div>
+            </div>
+            <div class="range-slider-wrapper">
+              <input type="range" id="interestRateRange" class="calc-range" min="1" max="30" step="0.1" value="8.5" aria-label="Interest Rate Slider">
+              <div class="range-minmax">
+                <span>1%</span>
+                <span>15%</span>
+                <span>30%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tenure Input with Toggle -->
+          <div class="input-group">
+            <div class="input-header">
+              <div class="input-label">
+                <label for="tenureInput">Loan Tenure</label>
+                <div class="tenure-toggle-group" role="group" aria-label="Tenure Unit Selector">
+                  <button type="button" id="tenureUnitYears" class="tenure-toggle-btn active" aria-pressed="true">Yr</button>
+                  <button type="button" id="tenureUnitMonths" class="tenure-toggle-btn" aria-pressed="false">Mo</button>
+                </div>
+              </div>
+              <div class="input-field-wrapper">
+                <input type="number" id="tenureInput" class="calc-text-input" value="20" min="1" max="30" step="1" aria-label="Loan Tenure Value">
+              </div>
+            </div>
+            <div class="range-slider-wrapper">
+              <input type="range" id="tenureRange" class="calc-range" min="1" max="30" step="1" value="20" aria-label="Loan Tenure Slider">
+              <div class="range-minmax">
+                <span id="tenureMinLabel">1 Yr</span>
+                <span>15 Yrs</span>
+                <span id="tenureMaxLabel">30 Yrs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Scenario Badges -->
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <span style="font-size: 0.78rem; color: var(--text-dim); align-self: center;">Popular:</span>
+            <button type="button" class="badge-link" onclick="document.getElementById('loanAmountRange').value=500000; document.getElementById('interestRateRange').value=10.5; document.getElementById('tenureRange').value=5; document.getElementById('loanAmountRange').dispatchEvent(new Event('input')); document.getElementById('interestRateRange').dispatchEvent(new Event('input')); document.getElementById('tenureRange').dispatchEvent(new Event('input'));">Personal Loan (₹5L @ 10.5%)</button>
+            <button type="button" class="badge-link" onclick="document.getElementById('loanAmountRange').value=1000000; document.getElementById('interestRateRange').value=8.75; document.getElementById('tenureRange').value=7; document.getElementById('loanAmountRange').dispatchEvent(new Event('input')); document.getElementById('interestRateRange').dispatchEvent(new Event('input')); document.getElementById('tenureRange').dispatchEvent(new Event('input'));">Car Loan (₹10L @ 8.75%)</button>
+            <button type="button" class="badge-link" onclick="document.getElementById('loanAmountRange').value=5000000; document.getElementById('interestRateRange').value=8.4; document.getElementById('tenureRange').value=20; document.getElementById('loanAmountRange').dispatchEvent(new Event('input')); document.getElementById('interestRateRange').dispatchEvent(new Event('input')); document.getElementById('tenureRange').dispatchEvent(new Event('input'));">Home Loan (₹50L @ 8.4%)</button>
+          </div>
+
+        </div>
+
+        <!-- Right: Results & Native SVG Donut Chart -->
+        <div class="calc-results" aria-live="polite">
+          
+          <!-- Highlight EMI -->
+          <div class="emi-highlight-box">
+            <div class="emi-highlight-title">Monthly Loan EMI</div>
+            <div class="emi-highlight-value" id="emiDisplay">₹ 21,696</div>
+            <div class="emi-highlight-sub">Payable every month</div>
+          </div>
+
+          <!-- Native SVG Donut Chart -->
+          <div class="chart-container">
+            <div class="donut-svg-wrapper">
+              <svg class="donut-svg" viewBox="0 0 160 160" aria-hidden="true">
+                <!-- Background Base Ring -->
+                <circle cx="80" cy="80" r="65" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="18"/>
+                <!-- Principal Ring Segment -->
+                <circle id="chartPrincipalCircle" cx="80" cy="80" r="65" fill="none" stroke="#38bdf8" stroke-width="18" stroke-dasharray="408.4 408.4" stroke-dashoffset="0" stroke-linecap="round"/>
+                <!-- Interest Ring Segment -->
+                <circle id="chartInterestCircle" cx="80" cy="80" r="65" fill="none" stroke="#f43f5e" stroke-width="18" stroke-dasharray="408.4 408.4" stroke-dashoffset="0" stroke-linecap="round"/>
+              </svg>
+              <div class="chart-center-text">
+                <span class="chart-center-label">Monthly EMI</span>
+                <span class="chart-center-val" id="chartCenterEmi">₹ 21,696</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metrics Breakdown -->
+          <div class="metrics-breakdown">
+            <div class="metric-row">
+              <div class="metric-title">
+                <span class="color-dot dot-principal"></span>
+                <span>Principal Loan</span>
+                <span class="metric-ratio" id="principalRatioDisplay">(48.0%)</span>
+              </div>
+              <div class="metric-value" id="principalDisplay">₹ 25,00,000</div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-title">
+                <span class="color-dot dot-interest"></span>
+                <span>Total Interest</span>
+                <span class="metric-ratio" id="interestRatioDisplay">(52.0%)</span>
+              </div>
+              <div class="metric-value" id="interestDisplay">₹ 27,07,040</div>
+            </div>
+
+            <div class="metric-row" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.25);">
+              <div class="metric-title" style="color: var(--text-main); font-weight: 700;">
+                <span>Total Amount Payable</span>
+              </div>
+              <div class="metric-value" id="totalPaymentDisplay" style="color: #38bdf8; font-size: 1.15rem;">₹ 52,07,040</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Amortization Schedule Accordion -->
+      <div class="schedule-section">
+        <button type="button" class="schedule-toggle" id="scheduleToggle" aria-expanded="false" aria-controls="scheduleContent">
+          <span>View Year-by-Year Amortization Schedule</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div id="scheduleContent" class="schedule-content">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Opening Balance</th>
+                <th>Principal Paid</th>
+                <th>Interest Paid</th>
+                <th>Closing Balance</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleTableBody">
+              <!-- Dynamically populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- In-Content Reserved Ad Slot (CLS = 0) -->
+    <aside class="ad-slot-wrapper" aria-label="In-Content Advertisement">
+      <div class="ad-slot ad-slot-incontent" id="ad-slot-incontent">
+        <span>In-Article Advertisement Space (336x280 / Responsive)</span>
+        <span class="ad-disclaimer">Google AdSense Partner Network</span>
+      </div>
+    </aside>
+
+    <!-- 400+ Words Original SEO Content & Educational Guide -->
+    <article class="seo-article" id="guide">
+      <h2>Complete Guide to EMI Calculation: Formulas, Tips, and Insights</h2>
+      
+      <p>
+        An <strong>Equated Monthly Installment (EMI)</strong> is an indispensable financial instrument for anyone planning to finance a dream home, purchase a new automobile, fund higher education, or consolidate personal expenses. When you take out a loan from a commercial bank or non-banking financial company (NBFC) in India, you agree to repay the borrowed principal amount alongside the lender's accrued interest charges over an agreed-upon tenure. Understanding how your monthly installments are calculated empowers you to optimize your finances, choose optimal loan tenures, and avoid paying unnecessary interest.
+      </p>
+
+      <h3>What is an EMI and How Does It Work?</h3>
+      <p>
+        An EMI is an equated, regular monthly sum paid by a borrower to a lending institution on a fixed date every calendar month until the total loan liability is liquidated. Each EMI payment is composed of two dynamic elements:
+      </p>
+      <ul>
+        <li><strong>Principal Component:</strong> The actual portion of your monthly payment that goes directly toward reducing the outstanding loan balance.</li>
+        <li><strong>Interest Component:</strong> The fee charged by the financial institution for lending you money, calculated on the outstanding balance.</li>
+      </ul>
+      <p>
+        In the initial phase of your loan term, a substantial portion of each EMI is allocated toward servicing the interest because the outstanding principal balance is at its highest. As you progressively repay the loan each month, the outstanding principal decreases, causing the interest charge to taper down while the principal repayment share gradually grows.
+      </p>
+
+      <h3>The Mathematical EMI Formula</h3>
+      <p>
+        Indian financial institutions and retail banking systems use the standardized reducing balance formula to determine your exact monthly installment:
+      </p>
+
+      <div class="formula-card">
+        <div class="formula-display">E = P &times; r &times; [ (1 + r)^n / ((1 + r)^n - 1) ]</div>
+        <div class="formula-variables">
+          <div><strong>E</strong> = Equated Monthly Installment (EMI)</div>
+          <div><strong>P</strong> = Principal Loan Amount</div>
+          <div><strong>r</strong> = Monthly Interest Rate (Annual Rate &divide; 12 &divide; 100)</div>
+          <div><strong>n</strong> = Loan Tenure in Months (Years &times; 12)</div>
+        </div>
+      </div>
+
+      <h3>Step-by-Step Practical Calculation Example</h3>
+      <p>
+        To see the formula in action, let us consider a real-world scenario of a home loan borrowed in India:
+      </p>
+      <ul>
+        <li><strong>Principal Amount (P):</strong> ₹ 25,00,000 (Twenty-Five Lakh Rupees)</li>
+        <li><strong>Annual Interest Rate:</strong> 8.5% per annum</li>
+        <li><strong>Monthly Interest Rate (r):</strong> 8.5 / (12 &times; 100) = 0.0070833</li>
+        <li><strong>Loan Tenure:</strong> 20 Years = 240 Months (n)</li>
+      </ul>
+      <p>
+        Substituting these values into the formula:
+      </p>
+      <p>
+        <code>(1 + 0.0070833)^240 &approx; 5.4357</code><br>
+        <code>Numerator = 25,00,000 &times; 0.0070833 &times; 5.4357 &approx; 96,259.97</code><br>
+        <code>Denominator = 5.4357 - 1 = 4.4357</code><br>
+        <code>Monthly EMI (E) = 96,259.97 / 4.4357 = ₹ 21,696</code>
+      </p>
+      <p>
+        Over the full 20-year span, you will pay a total of ₹ 52,07,040 across 240 installments. Of this total amount, ₹ 25,00,000 represents the principal amount you borrowed, while ₹ 27,07,040 is the cumulative interest paid to the lender. As illustrated in the interactive donut chart above, the interest component exceeds the principal amount over long durations!
+      </p>
+
+      <h3>4 Smart Strategies to Reduce Your Loan EMI and Total Interest</h3>
+      <ol>
+        <li>
+          <strong>Make Regular Principal Prepayments:</strong> Even a modest annual prepayment equivalent to one extra EMI per calendar year can trim several years off a 20-year home loan and save lakhs of rupees in interest.
+        </li>
+        <li>
+          <strong>Opt for a Shorter Loan Tenure:</strong> While longer tenures offer the psychological comfort of smaller monthly installments, they significantly amplify the compounding interest burden. Choose the shortest tenure your household monthly budget comfortably accommodates.
+        </li>
+        <li>
+          <strong>Maintain an Exceptional Credit Score:</strong> Borrowers with CIBIL scores of 750 and above qualify for preferential interest rates from leading public and private sector banks, which directly lowers your monthly installment.
+        </li>
+        <li>
+          <strong>Consider a Home Loan Balance Transfer:</strong> If current market interest rates drop well below your existing rate, explore refinancing your outstanding loan with another institution offering lower rates.
+        </li>
+      </ol>
+
+      <!-- FAQ Section with Schema Accordion -->
+      <section class="faq-section" id="faq">
+        <h2>Frequently Asked Questions (FAQ)</h2>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>What is an EMI and how is it calculated?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>EMI stands for Equated Monthly Installment. It represents the fixed payment made by a borrower to a financial lender on a specific date each month. It is computed using the reducing balance method where both principal and interest components are calibrated across the entire tenure.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>What is the mathematical formula used for EMI calculation?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>The standard mathematical formula is: <code>E = P &times; r &times; (1 + r)^n / ((1 + r)^n - 1)</code>, where P is the Principal loan amount, r is the periodic monthly interest rate (annual interest rate &divide; 12 &divide; 100), and n is the loan tenure in total months.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>How does loan tenure affect total interest payable?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>A longer tenure yields smaller monthly payments, making short-term debt servicing manageable, but leads to compounding interest that dramatically elevates total borrowing costs. A shorter tenure increases monthly outgo but yields massive lifetime interest savings.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>Can I prepay or make part-payments to reduce my EMI?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. Under Reserve Bank of India (RBI) guidelines, floating-rate individual home loans attract zero prepayment penalties. Any prepayment directly subtracts from the principal balance, allowing you to either reduce your future EMI or shorten the remaining loan tenure.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>Does this EMI calculator include processing fees or GST?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <p>This tool computes the core monthly principal and interest components. Upfront bank charges such as loan processing fees, valuation charges, documentation stamp duty, and applicable 18% GST are paid separately at loan origination.</p>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <!-- Bottom Reserved Ad Slot (CLS = 0) -->
+  <aside class="container ad-slot-wrapper" aria-label="Footer Advertisement Banner">
+    <div class="ad-slot" id="ad-slot-bottom">
+      <span>Advertisement Space (Leaderboard 728x90)</span>
+      <span class="ad-disclaimer">Google AdSense Partner Network</span>
+    </div>
+  </aside>
+
+  <!-- Site Footer with Required Branding & Legal Links -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>EMI Calculator</h3>
+          <p>A fast, privacy-focused, zero-dependency loan calculator tailored for Indian home loans, car loans, and personal financing.</p>
+          <div class="nav-badge-group">
+            <a href="https://instagram.com/bykunalbuilds" target="_blank" rel="noopener" class="badge-link" title="Follow @bykunalbuilds on Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>@bykunalbuilds</span>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">EMI Calculator</a></li>
+            <li><a href="about.html">About Kunal Builds</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Legal &amp; Policies</h4>
+          <ul class="footer-links">
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="disclaimer.html">Financial Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          &copy; 2026 EMI Calculator. Designed for financial transparency in India.
+        </div>
+        <div class="footer-built-by">
+          Built by <a href="https://heyitskunal.vercel.app/" target="_blank" rel="noopener">Kunal Builds</a> &middot; Open source on <a href="https://github.com/Kunal17711/emi-calculator" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/calculator.js"></script>
+</body>
+</html>
