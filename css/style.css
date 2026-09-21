@@ -1280,18 +1280,177 @@ a:hover, a:focus-visible {
   }
 }
 
-/* Responsive Utilities */
-@media (max-width: 768px) {
-  .calculator-card {
-    padding: 1.5rem;
-  }
-  .calc-results {
-    padding: 1.5rem;
-  }
-  .seo-article {
-    padding: 1.75rem;
-  }
-  .page-card {
-    padding: 1.75rem;
+/* ==========================================================================
+   LOAN TYPE SELECTOR — Pill Buttons
+   ========================================================================== */
+
+.loan-type-selector-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  margin-bottom: 1.25rem;
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  padding: 0 0.25rem 0.4rem;
+}
+
+.loan-type-selector-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.loan-type-selector {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  min-width: max-content;
+}
+
+@media (min-width: 700px) {
+  .loan-type-selector {
+    flex-wrap: wrap;
+    min-width: unset;
   }
 }
+
+.loan-type-btn {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  background: #ffffff;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  padding: 0.4rem 0.95rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.loan-type-btn:hover {
+  border-color: var(--color-bright-yellow);
+  color: var(--text-main);
+}
+
+.loan-type-btn.active,
+.loan-type-btn[aria-selected="true"] {
+  background-color: var(--color-bright-yellow);
+  border-color: var(--color-bright-yellow);
+  color: #111111;
+}
+
+.loan-type-btn:focus-visible {
+  outline: 2px solid var(--color-bright-yellow);
+  outline-offset: 2px;
+}
+
+/* Calculator Card Heading (H2) + subtitle */
+.calc-card-heading {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.calc-card-heading h2 {
+  font-size: clamp(1.45rem, 3vw + 0.5rem, 2rem);
+  color: var(--color-golden);
+  margin-bottom: 0.25rem;
+}
+
+.calc-card-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* Indicative rate note below results */
+.indicative-note {
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* ==========================================================================
+   RESPONSIVE — Mobile-first improvements (320px and up)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .calculator-card {
+    padding: 1.4rem 1.1rem;
+    border-radius: var(--radius-md);
+  }
+  .calc-results {
+    padding: 1.25rem;
+  }
+  .seo-article {
+    padding: 1.5rem 1.1rem;
+  }
+  .page-card {
+    padding: 1.5rem 1.1rem;
+  }
+  .input-header {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .schedule-content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .schedule-table {
+    min-width: 480px;
+  }
+  .donut-svg-wrapper {
+    width: 150px;
+    height: 150px;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .loan-types-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculator-card {
+    padding: 1.1rem 0.9rem;
+  }
+  .calc-results {
+    padding: 1rem 0.9rem;
+  }
+  .hero-section {
+    padding: 2.2rem 0 1.25rem;
+  }
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .calc-text-input {
+    width: 130px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .calc-text-input {
+    width: 110px;
+    font-size: 0.95rem;
+    padding: 0.55rem 0.7rem;
+  }
+  .input-label {
+    font-size: 0.88rem;
+  }
+  .metric-row {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .emi-highlight-value {
+    font-size: 1.9rem;
+  }
+}
+
