@@ -1,5 +1,5 @@
 /**
- * EMI Calculator - Vanilla JavaScript Engine
+ * EMI Calculator - Vanilla JavaScript Engine & UI Interactions
  * Author: Kunal Builds (@bykunalbuilds)
  * Free & Open Source | No external libraries
  */
@@ -38,6 +38,11 @@
   const scheduleContent = document.getElementById("scheduleContent");
   const scheduleTableBody = document.getElementById("scheduleTableBody");
 
+  // Mobile Drawer Elements
+  const mobileHamburger = document.getElementById("mobileHamburger");
+  const mobileDrawer = document.getElementById("mobileDrawer");
+  const drawerOverlay = document.getElementById("drawerOverlay");
+
   // State
   let tenureType = "years"; // "years" or "months"
   const CIRCLE_RADIUS = 65;
@@ -54,7 +59,6 @@
     maximumFractionDigits: 0,
   });
 
-  // Helper: Format raw number into readable Indian number
   function formatINR(amount) {
     return inrFormatter.format(amount);
   }
@@ -63,29 +67,52 @@
     return numberFormatter.format(num);
   }
 
-  // Update slider background gradient fill
+  // Update slider track fill with Bright Yellow (#FFC800)
   function updateSliderFill(slider) {
+    if (!slider) return;
     const min = parseFloat(slider.min) || 0;
     const max = parseFloat(slider.max) || 100;
     const val = parseFloat(slider.value) || 0;
     const percent = Math.min(Math.max(((val - min) / (max - min)) * 100, 0), 100);
-    slider.style.background = `linear-gradient(to right, #38bdf8 0%, #38bdf8 ${percent}%, rgba(255, 255, 255, 0.1) ${percent}%, rgba(255, 255, 255, 0.1) 100%)`;
+    slider.style.background = `linear-gradient(to right, #FFC800 0%, #FFC800 ${percent}%, #e5e7eb ${percent}%, #e5e7eb 100%)`;
   }
 
   // Core Calculation Function
   function calculateEMI() {
-    const principal = parseFloat(loanAmountRange.value) || 0;
-    const annualRate = parseFloat(interestRateRange.value) || 0;
-    const rawTenure = parseFloat(tenureRange.value) || 0;
+    if (!loanAmountInput || !interestRateInput || !tenureInput) return;
+
+    // Check if user has entered values
+    const rawLoanText = loanAmountInput.value.replace(/,/g, "").trim();
+    const rawRateText = interestRateInput.value.trim();
+    const rawTenureText = tenureInput.value.trim();
+
+    // If inputs are empty, display clean zero state
+    if (!rawLoanText && !rawRateText && !rawTenureText) {
+      if (emiDisplay) emiDisplay.textContent = "₹ 0";
+      if (principalDisplay) principalDisplay.textContent = "₹ 0";
+      if (interestDisplay) interestDisplay.textContent = "₹ 0";
+      if (totalPaymentDisplay) totalPaymentDisplay.textContent = "₹ 0";
+      if (principalRatioDisplay) principalRatioDisplay.textContent = "(0%)";
+      if (interestRatioDisplay) interestRatioDisplay.textContent = "(0%)";
+      if (chartCenterEmi) chartCenterEmi.textContent = "₹ 0";
+      resetDonutChart();
+      if (scheduleTableBody) scheduleTableBody.innerHTML = "";
+      return;
+    }
+
+    const principal = parseFloat(rawLoanText) || 0;
+    const annualRate = parseFloat(rawRateText) || 0;
+    const rawTenure = parseFloat(rawTenureText) || 0;
 
     // Convert tenure to total months
     const totalMonths = tenureType === "years" ? rawTenure * 12 : rawTenure;
 
     if (principal <= 0 || totalMonths <= 0) {
-      emiDisplay.textContent = "₹ 0";
-      principalDisplay.textContent = "₹ 0";
-      interestDisplay.textContent = "₹ 0";
-      totalPaymentDisplay.textContent = "₹ 0";
+      if (emiDisplay) emiDisplay.textContent = "₹ 0";
+      if (principalDisplay) principalDisplay.textContent = formatINR(principal);
+      if (interestDisplay) interestDisplay.textContent = "₹ 0";
+      if (totalPaymentDisplay) totalPaymentDisplay.textContent = formatINR(principal);
+      resetDonutChart();
       return;
     }
 
@@ -111,17 +138,17 @@
     }
 
     // Update Text Displays
-    emiDisplay.textContent = formatINR(monthlyEMI);
-    principalDisplay.textContent = formatINR(principal);
-    interestDisplay.textContent = formatINR(totalInterest);
-    totalPaymentDisplay.textContent = formatINR(totalPayment);
+    if (emiDisplay) emiDisplay.textContent = formatINR(monthlyEMI);
+    if (principalDisplay) principalDisplay.textContent = formatINR(principal);
+    if (interestDisplay) interestDisplay.textContent = formatINR(totalInterest);
+    if (totalPaymentDisplay) totalPaymentDisplay.textContent = formatINR(totalPayment);
 
     // Calculate Percentages
     const principalPercent = totalPayment > 0 ? (principal / totalPayment) * 100 : 100;
     const interestPercent = totalPayment > 0 ? (totalInterest / totalPayment) * 100 : 0;
 
-    principalRatioDisplay.textContent = `(${principalPercent.toFixed(1)}%)`;
-    interestRatioDisplay.textContent = `(${interestPercent.toFixed(1)}%)`;
+    if (principalRatioDisplay) principalRatioDisplay.textContent = `(${principalPercent.toFixed(1)}%)`;
+    if (interestRatioDisplay) interestRatioDisplay.textContent = `(${interestPercent.toFixed(1)}%)`;
 
     // Update SVG Donut Chart
     updateDonutChart(principalPercent, interestPercent, monthlyEMI);
@@ -132,21 +159,25 @@
     }
   }
 
+  function resetDonutChart() {
+    if (!chartPrincipalCircle || !chartInterestCircle) return;
+    chartPrincipalCircle.setAttribute("stroke-dasharray", `${CIRCUMFERENCE} ${CIRCUMFERENCE}`);
+    chartPrincipalCircle.setAttribute("stroke-dashoffset", `${CIRCUMFERENCE}`);
+    chartInterestCircle.setAttribute("stroke-dasharray", `0 ${CIRCUMFERENCE}`);
+    chartInterestCircle.setAttribute("stroke-dashoffset", `0`);
+  }
+
   // Update SVG Donut Chart
   function updateDonutChart(principalPct, interestPct, monthlyEMI) {
     if (!chartPrincipalCircle || !chartInterestCircle) return;
 
-    // Ensure circle circumference is set
     chartPrincipalCircle.setAttribute("stroke-dasharray", `${CIRCUMFERENCE} ${CIRCUMFERENCE}`);
     chartInterestCircle.setAttribute("stroke-dasharray", `${CIRCUMFERENCE} ${CIRCUMFERENCE}`);
 
     const principalOffset = CIRCUMFERENCE - (principalPct / 100) * CIRCUMFERENCE;
-    const interestOffset = CIRCUMFERENCE - (interestPct / 100) * CIRCUMFERENCE;
 
-    // Principal starts at top (-90deg rotated in CSS)
     chartPrincipalCircle.setAttribute("stroke-dashoffset", principalOffset);
 
-    // Interest segment begins where principal ends
     const interestDasharray = `${(interestPct / 100) * CIRCUMFERENCE} ${CIRCUMFERENCE}`;
     const interestDashoffset = -((principalPct / 100) * CIRCUMFERENCE);
     chartInterestCircle.setAttribute("stroke-dasharray", interestDasharray);
@@ -163,7 +194,7 @@
 
     const monthlyRate = annualRate / 12 / 100;
     let balance = principal;
-    let totalYears = Math.ceil(totalMonths / 12);
+    const totalYears = Math.ceil(totalMonths / 12);
     let html = "";
     let monthCounter = 0;
 
@@ -192,8 +223,8 @@
         <tr>
           <td>Year ${yr}</td>
           <td>${formatINR(Math.round(startBalance))}</td>
-          <td style="color: #38bdf8;">${formatINR(Math.round(yearlyPrincipal))}</td>
-          <td style="color: #f43f5e;">${formatINR(Math.round(yearlyInterest))}</td>
+          <td>${formatINR(Math.round(yearlyPrincipal))}</td>
+          <td style="color: #B8860B;">${formatINR(Math.round(yearlyInterest))}</td>
           <td>${formatINR(Math.round(balance))}</td>
         </tr>
       `;
@@ -206,10 +237,15 @@
 
   // Two-way synchronization for Loan Amount
   function syncLoanAmount(fromRange) {
+    if (!loanAmountInput || !loanAmountRange) return;
     if (fromRange) {
       loanAmountInput.value = formatCleanNumber(loanAmountRange.value);
     } else {
-      let val = parseFloat(loanAmountInput.value.replace(/,/g, "")) || 0;
+      let val = parseFloat(loanAmountInput.value.replace(/,/g, ""));
+      if (isNaN(val)) {
+        calculateEMI();
+        return;
+      }
       const min = parseFloat(loanAmountRange.min);
       const max = parseFloat(loanAmountRange.max);
       if (val > max) val = max;
@@ -223,10 +259,15 @@
 
   // Two-way synchronization for Interest Rate
   function syncInterestRate(fromRange) {
+    if (!interestRateInput || !interestRateRange) return;
     if (fromRange) {
       interestRateInput.value = parseFloat(interestRateRange.value).toFixed(1);
     } else {
-      let val = parseFloat(interestRateInput.value) || 0;
+      let val = parseFloat(interestRateInput.value);
+      if (isNaN(val)) {
+        calculateEMI();
+        return;
+      }
       const min = parseFloat(interestRateRange.min);
       const max = parseFloat(interestRateRange.max);
       if (val > max) val = max;
@@ -239,10 +280,15 @@
 
   // Two-way synchronization for Tenure
   function syncTenure(fromRange) {
+    if (!tenureInput || !tenureRange) return;
     if (fromRange) {
       tenureInput.value = tenureRange.value;
     } else {
-      let val = parseInt(tenureInput.value, 10) || 0;
+      let val = parseInt(tenureInput.value, 10);
+      if (isNaN(val)) {
+        calculateEMI();
+        return;
+      }
       const min = parseInt(tenureRange.min, 10);
       const max = parseInt(tenureRange.max, 10);
       if (val > max) val = max;
@@ -256,72 +302,158 @@
 
   // Switch tenure unit (Years <-> Months)
   function setTenureUnit(type) {
-    if (tenureType === type) return;
+    if (tenureType === type || !tenureRange || !tenureInput) return;
     tenureType = type;
 
     if (type === "years") {
-      tenureUnitYearsBtn.classList.add("active");
-      tenureUnitMonthsBtn.classList.remove("active");
-      tenureUnitYearsBtn.setAttribute("aria-pressed", "true");
-      tenureUnitMonthsBtn.setAttribute("aria-pressed", "false");
+      if (tenureUnitYearsBtn) {
+        tenureUnitYearsBtn.classList.add("active");
+        tenureUnitYearsBtn.setAttribute("aria-pressed", "true");
+      }
+      if (tenureUnitMonthsBtn) {
+        tenureUnitMonthsBtn.classList.remove("active");
+        tenureUnitMonthsBtn.setAttribute("aria-pressed", "false");
+      }
 
       tenureRange.min = "1";
       tenureRange.max = "30";
       tenureRange.step = "1";
-      tenureMinLabel.textContent = "1 Yr";
-      tenureMaxLabel.textContent = "30 Yrs";
+      if (tenureMinLabel) tenureMinLabel.textContent = "1 Yr";
+      if (tenureMaxLabel) tenureMaxLabel.textContent = "30 Yrs";
 
-      // Convert current months to years
-      const currentMonths = parseFloat(tenureRange.value) || 60;
-      const convertedYears = Math.min(30, Math.max(1, Math.round(currentMonths / 12)));
-      tenureRange.value = convertedYears;
-      tenureInput.value = convertedYears;
+      if (tenureInput.value) {
+        const currentMonths = parseFloat(tenureRange.value) || 60;
+        const convertedYears = Math.min(30, Math.max(1, Math.round(currentMonths / 12)));
+        tenureRange.value = convertedYears;
+        tenureInput.value = convertedYears;
+      }
     } else {
-      tenureUnitMonthsBtn.classList.add("active");
-      tenureUnitYearsBtn.classList.remove("active");
-      tenureUnitMonthsBtn.setAttribute("aria-pressed", "true");
-      tenureUnitYearsBtn.setAttribute("aria-pressed", "false");
+      if (tenureUnitMonthsBtn) {
+        tenureUnitMonthsBtn.classList.add("active");
+        tenureUnitMonthsBtn.setAttribute("aria-pressed", "true");
+      }
+      if (tenureUnitYearsBtn) {
+        tenureUnitYearsBtn.classList.remove("active");
+        tenureUnitYearsBtn.setAttribute("aria-pressed", "false");
+      }
 
       tenureRange.min = "6";
       tenureRange.max = "360";
       tenureRange.step = "1";
-      tenureMinLabel.textContent = "6 Mo";
-      tenureMaxLabel.textContent = "360 Mo";
+      if (tenureMinLabel) tenureMinLabel.textContent = "6 Mo";
+      if (tenureMaxLabel) tenureMaxLabel.textContent = "360 Mo";
 
-      // Convert current years to months
-      const currentYears = parseFloat(tenureRange.value) || 5;
-      const convertedMonths = Math.min(360, Math.max(6, currentYears * 12));
-      tenureRange.value = convertedMonths;
-      tenureInput.value = convertedMonths;
+      if (tenureInput.value) {
+        const currentYears = parseFloat(tenureRange.value) || 5;
+        const convertedMonths = Math.min(360, Math.max(6, currentYears * 12));
+        tenureRange.value = convertedMonths;
+        tenureInput.value = convertedMonths;
+      }
     }
 
     updateSliderFill(tenureRange);
     calculateEMI();
   }
 
-  // Event Listeners
+  // ==========================================================================
+  // MOBILE DRAWER INTERACTIONS
+  // ==========================================================================
+
+  function openDrawer() {
+    if (!mobileDrawer || !drawerOverlay || !mobileHamburger) return;
+    mobileDrawer.classList.add("active");
+    drawerOverlay.classList.add("active");
+    mobileHamburger.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden"; // Lock background scroll
+  }
+
+  function closeDrawer() {
+    if (!mobileDrawer || !drawerOverlay || !mobileHamburger) return;
+    mobileDrawer.classList.remove("active");
+    drawerOverlay.classList.remove("active");
+    mobileHamburger.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = ""; // Restore background scroll
+  }
+
+  if (mobileHamburger) {
+    mobileHamburger.addEventListener("click", () => {
+      const isExpanded = mobileHamburger.getAttribute("aria-expanded") === "true";
+      if (isExpanded) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+  }
+
+  if (drawerOverlay) {
+    drawerOverlay.addEventListener("click", closeDrawer);
+  }
+
+  // Close drawer on link click
+  const drawerLinks = document.querySelectorAll(".drawer-link");
+  drawerLinks.forEach((link) => {
+    link.addEventListener("click", closeDrawer);
+  });
+
+  // Close drawer on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mobileDrawer && mobileDrawer.classList.contains("active")) {
+      closeDrawer();
+      if (mobileHamburger) mobileHamburger.focus();
+    }
+  });
+
+  // ==========================================================================
+  // SCROLL FADE-UP ANIMATIONS (IntersectionObserver)
+  // ==========================================================================
+
+  if ("IntersectionObserver" in window) {
+    const fadeObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            fadeObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px",
+      }
+    );
+
+    document.querySelectorAll(".fade-up").forEach((el) => {
+      fadeObserver.observe(el);
+    });
+  } else {
+    // Fallback if IntersectionObserver is not supported
+    document.querySelectorAll(".fade-up").forEach((el) => {
+      el.classList.add("is-visible");
+    });
+  }
+
+  // ==========================================================================
+  // EVENT LISTENERS FOR CALCULATOR
+  // ==========================================================================
+
   if (loanAmountRange && loanAmountInput) {
     loanAmountRange.addEventListener("input", () => syncLoanAmount(true));
+    loanAmountInput.addEventListener("input", () => syncLoanAmount(false));
     loanAmountInput.addEventListener("change", () => syncLoanAmount(false));
-    loanAmountInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") syncLoanAmount(false);
-    });
   }
 
   if (interestRateRange && interestRateInput) {
     interestRateRange.addEventListener("input", () => syncInterestRate(true));
+    interestRateInput.addEventListener("input", () => syncInterestRate(false));
     interestRateInput.addEventListener("change", () => syncInterestRate(false));
-    interestRateInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") syncInterestRate(false);
-    });
   }
 
   if (tenureRange && tenureInput) {
     tenureRange.addEventListener("input", () => syncTenure(true));
+    tenureInput.addEventListener("input", () => syncTenure(false));
     tenureInput.addEventListener("change", () => syncTenure(false));
-    tenureInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") syncTenure(false);
-    });
   }
 
   if (tenureUnitYearsBtn && tenureUnitMonthsBtn) {
@@ -339,7 +471,6 @@
       } else {
         scheduleContent.classList.add("open");
         scheduleToggle.setAttribute("aria-expanded", "true");
-        // Re-calculate and render schedule
         calculateEMI();
       }
     });
@@ -352,7 +483,6 @@
       const isExpanded = button.getAttribute("aria-expanded") === "true";
       const answer = button.nextElementSibling;
 
-      // Close other open FAQs for clean accordion feel
       faqQuestions.forEach((otherBtn) => {
         if (otherBtn !== button) {
           otherBtn.setAttribute("aria-expanded", "false");
@@ -374,18 +504,15 @@
 
   // Initialize on DOM load
   document.addEventListener("DOMContentLoaded", () => {
-    if (loanAmountRange) {
-      loanAmountInput.value = formatCleanNumber(loanAmountRange.value);
-      updateSliderFill(loanAmountRange);
-    }
-    if (interestRateRange) {
-      interestRateInput.value = interestRateRange.value;
-      updateSliderFill(interestRateRange);
-    }
-    if (tenureRange) {
-      tenureInput.value = tenureRange.value;
-      updateSliderFill(tenureRange);
-    }
+    // Inputs start clean and empty per requirement
+    if (loanAmountInput) loanAmountInput.value = "";
+    if (interestRateInput) interestRateInput.value = "";
+    if (tenureInput) tenureInput.value = "";
+
+    if (loanAmountRange) updateSliderFill(loanAmountRange);
+    if (interestRateRange) updateSliderFill(interestRateRange);
+    if (tenureRange) updateSliderFill(tenureRange);
+
     calculateEMI();
   });
 })();
